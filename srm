@@ -25,6 +25,14 @@ if [ -z "$FILENAME" ];  then
     usage
 fi
 
+if [[ -d $FILENAME ]] || [[ -f $FILENAME ]]; then
+    if [[ "$IS_R" -eq 1 ]] && [[ -f $FILENAME ]]; then
+         usage
+    fi
+else
+    usage
+fi
+
 mkdir -p ~/RECYCLE
 find ~/RECYCLE* -mtime +7 -exec rm {} \;
 
@@ -34,5 +42,3 @@ echo $now
 echo $FILENAME
 
 find -wholename $FILENAME | tar -cvf ~/RECYCLE/backup_$now.tar -T -
-
-
