@@ -1,0 +1,5 @@
+#!/bin/bash
+# Lesson 2
+
+echo 'Safe remove v.0.1'
+mkdir -p ~/RECYCLE
