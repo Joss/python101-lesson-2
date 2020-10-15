@@ -4,13 +4,35 @@
 # Test cleaning
 # touch -a -m -t 201512180130.09 ~/RECYCLE/old_test_file
 
-echo 'Safe remove v.0.1
+usage() { echo "Usage: smr [-r] file|folder"; exit 1; }
 
-if [ $# -eq 0 ]
-  then
-    echo "srm: missing operand"
-    exit 1
+echo 'Safe remove v.0.1'
+
+while getopts ":r" opt; do
+    case ${opt} in
+        r )  IS_R=1
+             ;;
+        \? ) usage
+             ;;
+    esac
+done
+
+unset FILENAME
+shift $((OPTIND-1))
+FILENAME=$@
+
+if [ -z "$FILENAME" ];  then
+    usage
 fi
 
 mkdir -p ~/RECYCLE
 find ~/RECYCLE* -mtime +7 -exec rm {} \;
+
+now=$(date +"%m_%d_%Y_%I-%M-%S")
+
+echo $now
+echo $FILENAME
+
+find -wholename $FILENAME | tar -cvf ~/RECYCLE/backup_$now.tar -T -
+
+
