@@ -1,0 +1,11 @@
+#!/bin/bash 
+# Lesson 2 Install script
+
+mkdir -p ~/bin
+echo "export PATH=$PATH:~/bin" > ~/.bash_profile
+chmod +x ./srm
+mv ./srm ~/bin
+echo "Script installed"
+rm -- "$0"
+
+
