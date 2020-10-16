@@ -1,0 +1,59 @@
+#!/bin/bash
+# Lesson 2
+
+#TODO: Check for RECYCLE fodler
+
+# Test cleaning
+# touch -a -m -t 201512180130.09 ~/RECYCLE/old_test_file
+
+usage() { echo "Usage: srm [-r] file|folder"; exit 1; }
+
+echo 'Safe remove v.0.1'
+
+while getopts ":r" opt; do
+    case ${opt} in
+        r )  IS_R=1
+             ;;
+        \? ) usage
+             ;;
+    esac
+done
+
+unset FILENAME
+shift $((OPTIND-1))
+FILENAME=$@
+
+if [ -z "$FILENAME" ];  then
+    usage
+fi
+
+if [[ -d $FILENAME ]] || [[ -f $FILENAME ]]; then
+    if [[ "$IS_R" -eq 1 ]] && [[ -f $FILENAME ]]; then
+         usage
+    fi
+    if [[ "$IS_R" -eq 0 ]] && [[ -d $FILENAME ]]; then
+         usage
+    fi
+else
+    usage
+fi
+
+mkdir -p ~/RECYCLE
+find ~/RECYCLE* -mtime +7 -exec rm {} \;
+
+now=$(date +"%m_%d_%Y_%I-%M-%S")
+FILENAME_FULL=$(realpath -q $FILENAME)
+
+echo "Keeping..."
+find ~/ -wholename $FILENAME_FULL | tar -cvf ~/RECYCLE/backup_$now.tar -T - 2>/dev/null
+gzip ~/RECYCLE/backup_$now.tar 2>/dev/null
+
+#TODO Check for backup exist
+
+echo "Deleting..."
+if [[ "$IS_R" -eq 1 ]]; then
+    rm -r $FILENAME
+else
+    rm $FILENAME
+fi
+
