@@ -5,7 +5,7 @@ The lesson project demonstrating how to wrap rm command
 * clone the repo
 * `cd` into project folder
 * `chmod +x install`
-* run `install` script
+* run `./install` script
 
 ## Usage
 * Remove a file: `srm file`
